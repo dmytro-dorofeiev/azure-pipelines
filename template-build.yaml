@@ -4,13 +4,14 @@ parameters:
   buildConfiguration: ''
   runtime: ''
   appVersion: ''
+  sdkVersion: ''
 
 
 stages:
   - stage: Build
-    displayName: 'Build ${{ parameters.projectName }}'
+    displayName: 'Build'
     pool:
-      # name: 'Azure Pipelines'
+      name: 'Azure Pipelines'
       vmImage: ${{ parameters.vmImage }}
       # demands: ci
     jobs:
@@ -19,7 +20,7 @@ stages:
         - task: UseDotNet@2
           displayName: 'Setup Dotnet'
           inputs:
-            version: '2.x'
+            version: ${{ parameters.sdkVersion }}
             packageType: sdk
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet Restore'

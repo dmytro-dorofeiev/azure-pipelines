@@ -17,3 +17,7 @@ variables:
     value: DOTNETCORE|LTS
   - name: ConnectionType
     value: AzureRM
+  - name: appVersion
+    value: 1.0.0-CI+$(Build.BuildNumber)
+  - name: sdkVersion
+    value: 2.x
