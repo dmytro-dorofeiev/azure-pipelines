@@ -4,6 +4,7 @@
 #   vmImage: 'ubuntu-latest'
 
 # trigger:
+# batch: true
 #   - master
 
 variables:
@@ -23,6 +24,8 @@ stages:
     pool:
       name: 'Azure Pipelines'
       vmImage: $(vmImage)
+      demands:
+        - ci
     jobs:
       - job: "Build"
         steps:
@@ -55,8 +58,8 @@ stages:
           inputs:
             command: publish
             nobuild: true
-            projects: |
-              $(projectName)/$(projectName).csproj
+            # projects: |
+            #   $(projectName)/$(projectName).csproj
             publishWebProjects: true
             arguments: '-c $(buildConfiguration) --runtime $(runtime) --self-contained -o $(Build.ArtifactStagingDirectory)'
         - task: PublishBuildArtifacts@1
