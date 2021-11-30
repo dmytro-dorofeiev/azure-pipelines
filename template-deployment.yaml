@@ -47,7 +47,7 @@ stages:
             deploy:
               steps:
                 - download: current
-                  artifact: ${{ parmeters.appVersion }}
+                  artifact: ${{ parameters.appVersion }}
                 - script: ls
                 - script: echo Deployed to Production
                 # - task: AzureRmWebAppDeployment@4
