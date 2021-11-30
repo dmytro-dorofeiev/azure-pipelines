@@ -1,8 +1,9 @@
 parameters:
-  project: ""
-  vmImage: ""
-  buildConfiguration: ""
-  runtime: ""
+  project: ''
+  vmImage: ''
+  buildConfiguration: ''
+  runtime: ''
+  appVersion: ''
 
 stages:
   - stage: "Development"
@@ -13,6 +14,20 @@ stages:
           name: "Azure Pipelines"
           vmImage: ${{ parameters.vmImage }}
         environment: Development
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo Deployed to Dev
+
+  - stage: "Staging"
+    jobs:
+      - deployment: DeployWebApp
+        displayName: "Deploy to Dev"
+        pool:
+          name: "Azure Pipelines"
+          vmImage: ${{ parameters.vmImage }}
+        environment: Staging
         strategy:
           runOnce:
             deploy:
@@ -32,12 +47,14 @@ stages:
             deploy:
               steps:
                 - download: current
-                  artifact: drop
-                - task: AzureRmWebAppDeployment@4
-                  inputs:
-                    ConnectionType: "$(ConnectionType)"
-                    azureSubscription: "$(azureSubscription)"
-                    appType: "$(appType)"
-                    WebAppName: "$(WebAppName)"
-                    packageForLinux: "$(Pipeline.Workspace)/**/*.zip"
-                    RuntimeStack: "$(RuntimeStack)"
+                  artifact: ${{ parmeters.appVersion }}
+                - script: ls
+                - script: echo Deployed to Production
+                # - task: AzureRmWebAppDeployment@4
+                #   inputs:
+                #     ConnectionType: "$(ConnectionType)"
+                #     azureSubscription: "$(azureSubscription)"
+                #     appType: "$(appType)"
+                #     WebAppName: "$(WebAppName)"
+                #     packageForLinux: "$(Pipeline.Workspace)/**/*.zip"
+                #     RuntimeStack: "$(RuntimeStack)"
