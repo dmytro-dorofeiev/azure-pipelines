@@ -1,0 +1,71 @@
+# Build Docker image for this app using Azure Pipelines
+# http://docs.microsoft.com/azure/devops/pipelines/languages/docker?view=vsts
+# pool:
+#   vmImage: 'ubuntu-latest'
+
+# trigger:
+#   - master
+
+variables:
+  buildConfiguration: 'Release'
+  projectName: 'dotnetcore-sample'
+  projectTests: 'dotnetcore-tests'
+  runtime: 'linux-x64'
+  appVersion: '1.0.0-CI+$(Build.BuildNumber)'
+  vmImage: 'ubuntu-latest'
+  # imageName: 'dotnetcore:$(Build.BuildId)'
+
+name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+stages:
+  - stage: Build
+    displayName: 'Build Project'
+    pool:
+      name: 'Azure Pipelines'
+      vmImage: $(vmImage)
+    jobs:
+      - job: "Build"
+        steps:
+        - task: UseDotNet@2
+          displayName: 'Setup Dotnet'
+          inputs:
+            version: '2.x'
+            packageType: sdk
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Restore'
+          inputs:
+            command: restore
+            # projects: |
+            #   $(projectName)/$(projectName).csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Build'
+          inputs:
+            command: build
+            # projects: |
+            #   $(projectName)/$(projectName).csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Test'
+          inputs:
+            command: test
+            nobuild: true
+            # projects: |
+            #   $(projectTests)/$(projectTests).csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Publish'
+          inputs:
+            command: publish
+            nobuild: true
+            projects: |
+              $(projectName)/$(projectName).csproj
+            publishWebProjects: true
+            arguments: '-c $(buildConfiguration) --runtime $(runtime) --self-contained -o $(Build.ArtifactStagingDirectory)'
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Build Artifact'
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: '$(appVersion)'
+        # - task: PublishPipelineArtifact@1
+        #   displayName: 'Publish pipeline Artifact'
+        #   inputs:
+        #     targetPath: '$(Pipeline.Workspace)'
+        #     artifactName: '$(Build.BuildNumber)' 
