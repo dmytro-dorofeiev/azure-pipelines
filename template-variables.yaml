@@ -1,6 +1,6 @@
 variables:
   - name: projectName
-    value: WebApplication1
+    value: dotnetcore-sample
   - name: vmImage
     value: ubuntu-latest
   - name: buildConfiguration
@@ -12,7 +12,7 @@ variables:
   - name: appType
     value: webAppLinux
   - name: WebAppName
-    value: blazor-dock
+    value: dotnetcore-sample
   - name: RuntimeStack
     value: DOTNETCORE|LTS
   - name: ConnectionType
