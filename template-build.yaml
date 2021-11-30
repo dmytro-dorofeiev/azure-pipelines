@@ -8,8 +8,8 @@ parameters:
 
 
 stages:
-  - stage: Build
-    displayName: 'Build'
+  - stage: CI
+    displayName: 'CI'
     pool:
       name: 'Azure Pipelines'
       vmImage: ${{ parameters.vmImage }}

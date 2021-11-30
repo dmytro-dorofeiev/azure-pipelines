@@ -18,6 +18,7 @@ stages:
           runOnce:
             deploy:
               steps:
+                - script: ls $(Build.ArtifactStagingDirectory)
                 - script: echo Deployed to Dev
 
   - stage: "Staging"
@@ -48,7 +49,7 @@ stages:
               steps:
                 # - download: current
                 #   artifact: ${{ parameters.appVersion }}
-                - script: ls
+                - script: ls $(Build.ArtifactStagingDirectory)
                 - script: echo Deployed to Production
                 # - task: AzureRmWebAppDeployment@4
                 #   inputs:
