@@ -1,33 +1,61 @@
 parameters:
-  projectName: ""
-  vmImage: ""
-  buildConfiguration: ""
-  runtime: ""
+  projectName: ''
+  vmImage: ''
+  buildConfiguration: ''
+  runtime: ''
+  appVersion: ''
+
 
 stages:
-  - stage: "Build"
-    displayName: "Build"
+  - stage: Build
+    displayName: 'Build ${{ parameters.projectName }}'
     pool:
-      name: "Azure Pipelines"
+      # name: 'Azure Pipelines'
       vmImage: ${{ parameters.vmImage }}
+      # demands: ci
     jobs:
       - job: "Build"
         steps:
-          - task: DotNetCoreCLI@1
-            displayName: "Dotnet Build"
-            inputs:
-              command: build
-              projects: |
-                ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj
-          - task: DotNetCoreCLI@2
-            displayName: "Dotnet Publish"
-            inputs:
-              command: publish
-              projects: |
-                ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj
-              publishWebProjects: true
-              arguments: "-c $(buildConfiguration) --runtime $(runtime) --self-contained -o $(Build.ArtifactStagingDirectory)"
-          - task: PublishBuildArtifacts@1
-            inputs:
-              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-              ArtifactName: "drop"
+        - task: UseDotNet@2
+          displayName: 'Setup Dotnet'
+          inputs:
+            version: '2.x'
+            packageType: sdk
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Restore'
+          inputs:
+            command: restore
+            # projects: |
+            #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Build'
+          inputs:
+            command: build
+            # projects: |
+            #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Test'
+          inputs:
+            command: test
+            nobuild: true
+            # projects: |
+            #   ${{ parameters.projectTests }}/${{ parameters.projectTests }}.csproj  
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet Publish'
+          inputs:
+            command: publish
+            nobuild: true
+            # projects: |
+            #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj
+            publishWebProjects: true
+            arguments: '-c ${{ parameters.buildConfiguration }} --runtime ${{ parameters.runtime }} --self-contained -o $(Build.ArtifactStagingDirectory)'
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Build Artifact'
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: '${{ parameters.appVersion }}'
+        # - task: PublishPipelineArtifact@1
+        #   displayName: 'Publish pipeline Artifact'
+        #   inputs:
+        #     targetPath: '$(Pipeline.Workspace)'
+        #     artifactName: '$(Build.BuildNumber)' 
