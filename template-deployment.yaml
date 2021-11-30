@@ -23,7 +23,7 @@ stages:
   - stage: "Staging"
     jobs:
       - deployment: DeployWebApp
-        displayName: "Deploy to Dev"
+        displayName: "Deploy to Staging"
         pool:
           name: "Azure Pipelines"
           vmImage: ${{ parameters.vmImage }}
@@ -32,7 +32,7 @@ stages:
           runOnce:
             deploy:
               steps:
-                - script: echo Deployed to Dev
+                - script: echo Deployed to Staging
 
   - stage: "Production"
     jobs:
@@ -46,8 +46,8 @@ stages:
           runOnce:
             deploy:
               steps:
-                - download: current
-                  artifact: ${{ parameters.appVersion }}
+                # - download: current
+                #   artifact: ${{ parameters.appVersion }}
                 - script: ls
                 - script: echo Deployed to Production
                 # - task: AzureRmWebAppDeployment@4
