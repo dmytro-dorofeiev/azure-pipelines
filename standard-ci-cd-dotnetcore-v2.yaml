@@ -1,0 +1,45 @@
+trigger:
+  - master
+  - release/*
+
+variables:
+  - template: template-variables.yaml
+
+stages:
+  - stage: Build
+    template: template-build-v2.yaml
+      parameters:
+        projectName: $(projectName)
+        vmImage: $(vmImage)
+        buildConfiguration: $(buildConfiguration)
+        runtime: $(runtime)
+
+  - stage: Deploy_to_Dev
+    template: template-deployment-v2.yaml
+    dependsOn: Build
+    parameters:
+      projectName: $(projectName)
+      vmImage: $(vmImage)
+      RuntimeStack: $(RuntimeStack)
+      WebAppName: $(WebAppName)
+      environment: Development
+
+  - stage: Deploy_to_Stg
+    template: template-deployment-v2.yaml
+    dependsOn: Deploy_to_Dev
+    parameters:
+      projectName: $(projectName)
+      vmImage: $(vmImage)
+      RuntimeStack: $(RuntimeStack)
+      WebAppName: $(WebAppName)
+      environment: Development
+
+  - stage: Deploy_to_Prod
+    template: template-deployment-v2.yaml
+    dependsOn: Deploy_to_Stg
+    parameters:
+      projectName: $(projectName)
+      vmImage: $(vmImage)
+      RuntimeStack: $(RuntimeStack)
+      WebAppName: $(WebAppName)
+      environment: Development

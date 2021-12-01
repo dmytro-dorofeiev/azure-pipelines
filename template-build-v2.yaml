@@ -1,0 +1,58 @@
+parameters:
+  projectName: ''
+  vmImage: ''
+  buildConfiguration: ''
+  runtime: ''
+  appVersion: ''
+  sdkVersion: ''
+
+
+jobs:
+  - job: Build
+    pool:
+      name: 'Azure Pipelines'
+      vmImage: ${{ parameters.vmImage }}
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Setup Dotnet'
+      inputs:
+        version: ${{ parameters.sdkVersion }}
+        packageType: sdk
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Restore'
+      inputs:
+        command: restore
+        # projects: |
+        #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj  
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Build'
+      inputs:
+        command: build
+        # projects: |
+        #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj  
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Test'
+      inputs:
+        command: test
+        nobuild: true
+        # projects: |
+        #   ${{ parameters.projectTests }}/${{ parameters.projectTests }}.csproj  
+    - task: DotNetCoreCLI@2
+      displayName: 'Dotnet Publish'
+      inputs:
+        command: publish
+        nobuild: true
+        # projects: |
+        #   ${{ parameters.projectName }}/${{ parameters.projectName }}.csproj
+        publishWebProjects: true
+        arguments: '-c ${{ parameters.buildConfiguration }} --runtime ${{ parameters.runtime }} --self-contained -o $(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Build Artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: '${{ parameters.appVersion }}'
+    # - task: PublishPipelineArtifact@1
+    #   displayName: 'Publish pipeline Artifact'
+    #   inputs:
+    #     targetPath: '$(Pipeline.Workspace)'
+    #     artifactName: '$(Build.BuildNumber)' 
