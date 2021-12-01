@@ -1,0 +1,34 @@
+# Parallel env deployment
+parameters:
+  project: ''
+  vmImage: ''
+  buildConfiguration: ''
+  runtime: ''
+  appVersion: ''
+  environment: ''
+
+jobs:
+  - deployment: DeployWebApp
+    displayName: "Deploy to ${{ parameters.environment }}"
+    pool:
+      name: "Azure Pipelines"
+      vmImage: ${{ parameters.vmImage }}
+    environment: ${{ parameters.environment }}
+    strategy:
+      maxParallel: 1
+      matrix:
+        deploy:
+          environment: "all"
+          steps:
+            # - download: current
+            #   artifact: ${{ parameters.appVersion }}
+            - script: ls $(Build.ArtifactStagingDirectory)
+            - script: echo Deployed to ${{ parameters.environment }}
+            # - task: AzureRmWebAppDeployment@4
+            #   inputs:
+            #     ConnectionType: "$(ConnectionType)"
+            #     azureSubscription: "$(azureSubscription)"
+            #     appType: "$(appType)"
+            #     WebAppName: "$(WebAppName)"
+            #     packageForLinux: "$(Pipeline.Workspace)/**/*.zip"
+            #     RuntimeStack: "$(RuntimeStack)"
