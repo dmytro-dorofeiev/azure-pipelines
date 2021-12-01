@@ -32,7 +32,7 @@ stages:
       vmImage: $(vmImage)
       RuntimeStack: $(RuntimeStack)
       WebAppName: $(WebAppName)
-      environment: Development
+      environment: Stgaging
 
   - stage: Deploy_to_Prod
     template: template-deployment-v2.yaml
@@ -42,4 +42,4 @@ stages:
       vmImage: $(vmImage)
       RuntimeStack: $(RuntimeStack)
       WebAppName: $(WebAppName)
-      environment: Development
+      environment: Production
