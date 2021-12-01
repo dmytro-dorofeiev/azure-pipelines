@@ -8,7 +8,7 @@ parameters:
 
 jobs:
   - deployment: DeployWebApp
-    # displayName: "Deploy to ${{ parameters.environment }}"
+    displayName: "Deploy to ${{ parameters.environment }}"
     pool:
       name: "Azure Pipelines"
       vmImage: ${{ parameters.vmImage }}
