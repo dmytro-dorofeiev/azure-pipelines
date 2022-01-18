@@ -8,7 +8,7 @@ parameters:
 stages:
   - stage: "Dev"
     jobs:
-      - deployment: $(parameters.project)
+      - deployment: Deploy
         displayName: "Deploy to Dev"
         pool:
           name: "Azure Pipelines"
