@@ -6,9 +6,9 @@ parameters:
   appVersion: ''
 
 stages:
-  - stage: "Deploy_to_Dev"
+  - stage: "Dev"
     jobs:
-      - deployment: ${{ parameters.project}}
+      - deployment: Dev
         displayName: "Deploy to Dev"
         pool:
           name: "Azure Pipelines"
@@ -21,10 +21,10 @@ stages:
                 - script: ls $(Build.ArtifactStagingDirectory)
                 - script: echo Deployed to Dev
 
-  - stage: "Deploy_to_Stg"
+  - stage: Stg"
     jobs:
-      - deployment: ${{ parameters.project}}
-        # displayName: "Deploy to Staging"
+      - deployment: Stg
+        displayName: "Deploy to Staging"
         pool:
           name: "Azure Pipelines"
           vmImage: ${{ parameters.vmImage }}
@@ -35,10 +35,10 @@ stages:
               steps:
                 - script: echo Deployed to Staging
 
-  - stage: "Deploy_to_Prod"
+  - stage: "Prod"
     jobs:
-      - deployment: ${{ parameters.project}}
-        # displayName: "Deploy to Production"
+      - deployment: Prod
+        displayName: "Deploy to Production"
         pool:
           name: "Azure Pipelines"
           vmImage: ${{ parameters.vmImage }}
