@@ -8,7 +8,7 @@ parameters:
 stages:
   - stage: "Dev"
     jobs:
-      - deployment: Deploy
+      - deployment: Deploy_to_DEV
         displayName: "Deploy to Dev"
         pool:
           name: "Azure Pipelines"
@@ -23,7 +23,7 @@ stages:
 
   - stage: "Stg"
     jobs:
-      - deployment: ${{ parameters.project }}
+      - deployment: Deploy_to_STG
         displayName: "Deploy to Staging"
         pool:
           name: "Azure Pipelines"
@@ -37,7 +37,7 @@ stages:
 
   - stage: "Prod"
     jobs:
-      - deployment: ${{ parameters.project }}
+      - deployment: Deploy_to_PROD
         displayName: "Deploy to Production"
         pool:
           name: "Azure Pipelines"
