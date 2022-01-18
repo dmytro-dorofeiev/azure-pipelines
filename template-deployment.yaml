@@ -21,7 +21,7 @@ stages:
                 - script: ls $(Build.ArtifactStagingDirectory)
                 - script: echo Deployed to Dev
 
-  - stage: Stg"
+  - stage: "Stg"
     jobs:
       - deployment: Stg
         displayName: "Deploy to Staging"
