@@ -14,6 +14,8 @@ stages:
           name: "Azure Pipelines"
           vmImage: ${{ parameters.vmImage }}
         environment: Development
+        variables:
+          - group: dev-variables
         strategy:
           runOnce:
             deploy:
@@ -22,6 +24,10 @@ stages:
                 - script: |
                     echo Deployed to Dev
                     echo "Test Global variable groups $(first)"
+                    echo "Test job variable" 
+                    echo "environment = $(environment)"
+                    echo "username = $(username)"
+                    echo "password = $(password)"
 
   - stage: "Stg"
     jobs:
