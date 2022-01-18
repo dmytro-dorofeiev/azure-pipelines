@@ -19,7 +19,10 @@ stages:
             deploy:
               steps:
                 - script: ls $(Build.ArtifactStagingDirectory)
-                - script: echo Deployed to Dev
+                - script: |
+                    echo Deployed to Dev
+                    echo "one $(first)"
+                    echo "two ${{ variables.first }}"
 
   - stage: "Stg"
     jobs:
